@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Coupon_API.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Sqlite : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace Coupon_API.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Amount = table.Column<int>(type: "INTEGER", nullable: false)
+                    Amount = table.Column<double>(type: "REAL", precision: 14, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,42 +27,43 @@ namespace Coupon_API.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    IdUser = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                    Email = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.IdUser);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "FavoriteItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Price = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    IdItem = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    IdUser = table.Column<int>(type: "INTEGER", maxLength: 5, nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", precision: 14, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_FavoriteItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Items_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_FavoriteItems_Users_IdUser",
+                        column: x => x.IdUser,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "IdUser",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_UserId",
-                table: "Items",
-                column: "UserId");
+                name: "IX_FavoriteItems_IdUser",
+                table: "FavoriteItems",
+                column: "IdUser");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -71,7 +72,7 @@ namespace Coupon_API.Migrations
                 name: "Coupons");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "FavoriteItems");
 
             migrationBuilder.DropTable(
                 name: "Users");

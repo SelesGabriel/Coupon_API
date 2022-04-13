@@ -5,10 +5,10 @@ namespace Coupon_API.Models
     public class Item
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
         [JsonProperty("title")]
-        public string Name { get; set; }
+        public string? Title { get; set; }
         [JsonProperty("price")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

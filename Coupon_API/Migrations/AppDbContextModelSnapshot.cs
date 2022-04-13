@@ -23,8 +23,9 @@ namespace Coupon_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Amount")
+                        .HasPrecision(14, 2)
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -35,60 +36,66 @@ namespace Coupon_API.Migrations
                     b.ToTable("Coupons");
                 });
 
-            modelBuilder.Entity("Coupon_API.Models.Item", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Items");
-                });
-
             modelBuilder.Entity("Coupon_API.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdUser")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
-                        .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdUser");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Coupon_API.Models.Item", b =>
+            modelBuilder.Entity("FavoriteItems", b =>
                 {
-                    b.HasOne("Coupon_API.Models.User", null)
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(14, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IdItem")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IdUser")
+                        .HasMaxLength(5)
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("FavoriteItems");
+                });
+
+            modelBuilder.Entity("FavoriteItems", b =>
+                {
+                    b.HasOne("Coupon_API.Models.User", "User")
                         .WithMany("Favorites")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Coupon_API.Models.User", b =>
