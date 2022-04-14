@@ -7,7 +7,7 @@
   "userName": "admin",
   "password": "admin"
 }
-o token expira 1 após gerar.
+o token expira depois de 1 dia após a geração.
 
 4 - Para levantar a aplicação, pode ser utilizando o Visual Studio ou Visual Code. No Visual Studio, basta rodar que já vai direto para a interface do Swagger.
 No Visual Code, basta dar o comando dotnet run e acessar a interface do Swagger no link abaixo.
