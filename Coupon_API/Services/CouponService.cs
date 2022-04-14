@@ -14,8 +14,6 @@ public class CouponService
             if (favoriteList.Any(x => x.IdItem == favorite))
                 newFavoriteList.Add(favoriteList.Where(x=> x.IdItem == favorite).First());
         }
-
-
         var result = Combinations(newFavoriteList, coupon);
         var item_ids = result.Item1;
         var total = coupon.Amount - result.Item2;
