@@ -8,7 +8,7 @@ namespace Coupon_API.Models
 {
     public class User
     {
-
+        [JsonIgnore]
         public int IdUser { get; set; }
         public string? Name { get; set; }
         public string? LastName { get; set; }

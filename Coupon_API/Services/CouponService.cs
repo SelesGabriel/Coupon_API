@@ -1,6 +1,7 @@
 ﻿
 using Coupon_API.Data;
 using Coupon_API.Models;
+using System.Text;
 
 public class CouponService
 {
@@ -16,62 +17,49 @@ public class CouponService
 
 
         var result = Combinations(newFavoriteList, coupon);
-
+        var item_ids = result.Item1;
+        var total = coupon.Amount - result.Item2;
 
         return new
         {
-            item_ids = newFavoriteList,
-            total = 20
+            item_ids = item_ids,
+            total = total
         };
     }
 
-    public List<FavoriteItems> Combinations(List<FavoriteItems> favorites, Coupon coupon)
+    public Tuple<List<string>, decimal> Combinations(List<FavoriteItems> favorites, Coupon coupon)
     {
         var valMax = coupon.Amount;
         decimal valorSoma = 0;
-        string descricaoSoma = "";
-        FavoriteItems favoriteitems = new();
         List<FavoriteItems> result = new();
         List<string> possibilidades = new();
+        var tuple = new List<Tuple<List<string>, decimal>>();
 
-        //List<decimal> favorites = new() { 10, 20, 30, 40, 50, 60 };
-
-        for (int i = 0; i < favorites.Count; i++)
+        for(int i = 0; i< favorites.Count; i++)
         {
-            if (valorSoma + favorites[i].Amount <= valMax)
+            if(favorites[i].Amount + valorSoma < valMax)
             {
-                
-                descricaoSoma = $"{descricaoSoma} ({favorites[i].IdItem} {favorites[i].Amount}) + {valorSoma} value {favorites[i].Amount + valorSoma}";
-                valorSoma = valorSoma + favorites[i].Amount;
+                valorSoma += favorites[i].Amount;
+                possibilidades.Add(favorites[i].IdItem);
             }
-            for (int j = 0; j < favorites.Count; j++)
+            for(int j = 0; j < favorites.Count; j++)
             {
                 if (i != j)
                 {
-                    if (valorSoma + favorites[j].Amount <= valMax)
+                    if(valorSoma + favorites[j].Amount < valMax)
                     {
-                        descricaoSoma = $"{descricaoSoma} (({favorites[i].IdItem} {favorites[j].Amount}) + {valorSoma} value {favorites[j].Amount + valorSoma}";
-                        valorSoma = valorSoma + favorites[j].Amount;
-
+                        valorSoma += favorites[j].Amount;
+                        possibilidades.Add(favorites[j].IdItem);
                     }
-
                     else
                     {
-                        possibilidades.Add(descricaoSoma);
-                        descricaoSoma = "";
+                        tuple.Add(Tuple.Create(possibilidades, valorSoma));
+                        possibilidades = new List<string>();
                         valorSoma = 0;
                     }
                 }
-
-
             }
         }
-        List<string> teste = new();
-        
-
-
-        return new List<FavoriteItems>();
+        return tuple.OrderByDescending(t => t.Item2).FirstOrDefault();
     }
-
 }
-

@@ -11,8 +11,7 @@ public class ItemService
         try
         {
             var response = client.GetStringAsync(uri);
-
-            Item item = JsonConvert.DeserializeObject<Item>(response.Result);
+            Item? item = JsonConvert.DeserializeObject<Item>(response.Result);
             return item;
         }
         catch (Exception)

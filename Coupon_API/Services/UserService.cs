@@ -6,17 +6,23 @@ public class UserService
 {
     public List<User>? GetUser(AppDbContext context)
     {
-
         return context.Users.ToList();
     }
     public User GetUser(AppDbContext context, int id)
     {
-        return context.Users.FirstOrDefault(x => x.IdUser == id);
+        try
+        {
+            return context.Users.FirstOrDefault(x => x.IdUser == id);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
     }
     public User PostUser(AppDbContext context, User user)
     {
-        List<User> listUser = GetUser(context);
         user.RegistrationDate = DateTime.UtcNow;
+        //Commented to facilitate the test :)
         //foreach (var newUser in listUser)
         //{
         //    if (user.Email == newUser.Email)
